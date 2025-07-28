@@ -1,7 +1,6 @@
 package com.example.rc_car_control_ble.ui.theme
 
-import android.app.Activity
-import android.os.Build
+import AppTypography
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -52,7 +51,7 @@ fun RC_CAR_CONTROL_BLETheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = AppTypography,
         content = content
     )
 }

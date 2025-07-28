@@ -1,15 +1,22 @@
-package com.example.rc_car_control_ble.ui.theme
-
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.rc_car_control_ble.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
+val groteskFamily = FontFamily(
+    Font(R.font.grotesk, FontWeight.Normal)
+)
+
+val robottoFamily = FontFamily(
+    Font(R.font.roboto, FontWeight.Normal)
+)
+
+val AppTypography = Typography(
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = robottoFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
