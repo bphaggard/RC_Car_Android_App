@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 
 val back_yellow = Color(color = 0xFFF6EFE4)
+val merc_red = Color(color = 0xFFB54035)
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

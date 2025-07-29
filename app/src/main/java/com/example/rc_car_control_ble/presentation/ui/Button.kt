@@ -32,7 +32,8 @@ fun ControlButton(rotate: Float, direction: String){
         )
         OutlinedIconButton(
             onClick = {},
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier
+                .size(56.dp),
             border = BorderStroke(5.dp, Color.Black)
         )
         {

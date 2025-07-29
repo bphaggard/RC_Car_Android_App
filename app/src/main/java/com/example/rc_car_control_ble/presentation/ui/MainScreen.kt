@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rc_car_control_ble.R
 import com.example.rc_car_control_ble.ui.theme.back_yellow
+import com.example.rc_car_control_ble.ui.theme.merc_red
 import groteskFamily
 
 @Composable
@@ -60,7 +62,10 @@ fun BackgroundScreen(){
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = {  }) {
+            Button(
+                onClick = {  },
+                colors = ButtonDefaults.buttonColors(containerColor = merc_red)
+            ) {
                 Text("Connect to HM-10")
             }
             Spacer(modifier = Modifier.height(16.dp))
