@@ -29,7 +29,8 @@ fun Navigation() {
             DeviceListScreen(
                 state = state,
                 onStartScan = viewModel::startScan,
-                onStopScan = viewModel::stopScan
+                onStopScan = viewModel::stopScan,
+                navController
             )
         }
     }

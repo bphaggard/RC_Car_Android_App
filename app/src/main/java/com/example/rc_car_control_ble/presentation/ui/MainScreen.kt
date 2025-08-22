@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -89,24 +90,36 @@ fun BackgroundScreen(navController: NavController){
                 {
                     Icon(
                         painter = painterResource(R.drawable.outline_lightbulb_24),
-                        contentDescription = null,
+                        contentDescription = "lights on/off",
                         modifier = Modifier
-                            .size(34.dp)
+                            .size(34.dp),
+                        tint = Color.Black
                     )
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            ControlButton(0f, "forward")
-            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                ControlButton(270f, "left")
-                ControlButton(90f, "right")
+                Column(
+                    modifier = Modifier.fillMaxHeight(0.4f),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    ControlButton(0f, "forward")
+                    ControlButton(180f, "backward")
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.5f),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ControlButton(270f, "left")
+                    Spacer(modifier = Modifier.height(10.dp))
+                    ControlButton(90f, "right")
+                }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            ControlButton(180f, "backward")
         }
     }
 }

@@ -42,7 +42,8 @@ fun ControlButton(rotate: Float, direction: String){
                 contentDescription = null,
                 modifier = Modifier
                     .size(34.dp)
-                    .rotate(rotate)
+                    .rotate(rotate),
+                tint = Color.Black
             )
         }
     }
