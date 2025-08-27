@@ -39,6 +39,8 @@ fun DeviceListScreen(
     state: BluetoothUiState,
     onStartScan: () -> Unit,
     onStopScan: () -> Unit,
+    onStartServer: () -> Unit,
+    onDeviceClick: (BluetoothDevice) -> Unit,
     navController : NavController,
 ) {
     Scaffold(
@@ -69,7 +71,7 @@ fun DeviceListScreen(
                 BluetoothDeviceList(
                     pairedDevices = state.pairedDevices,
                     scannedDevices = state.scannedDevices,
-                    onClick = {},
+                    onClick = onDeviceClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
@@ -89,6 +91,12 @@ fun DeviceListScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = merc_red)
                     ) {
                         Text(text = "Stop scan")
+                    }
+                    Button(
+                        onClick = onStartServer,
+                        colors = ButtonDefaults.buttonColors(containerColor = merc_red)
+                    ) {
+                        Text(text = "Start server")
                     }
                 }
             }
