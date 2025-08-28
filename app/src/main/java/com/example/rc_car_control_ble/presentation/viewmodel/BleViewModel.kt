@@ -13,11 +13,15 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 import javax.inject.Inject
 
@@ -31,6 +35,21 @@ class BleViewModel @Inject constructor(
         val UART_TX_UUID: UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb") // Notify
         const val TAG = "BleViewModel"
     }
+
+    var lightsOn by mutableStateOf(false)
+        private set
+
+    fun toggleLights() {
+        lightsOn = !lightsOn
+        if (lightsOn) {
+            sendToHm10("lights.on")
+        } else {
+            sendToHm10("lights.off")
+        }
+    }
+
+    private val _isConnected = MutableStateFlow(false)
+    val isConnected: StateFlow<Boolean> = _isConnected.asStateFlow()
 
     private val _devices = MutableStateFlow<List<BluetoothDevice>>(emptyList())
     val devices: StateFlow<List<BluetoothDevice>> = _devices
@@ -63,8 +82,52 @@ class BleViewModel @Inject constructor(
 
     @SuppressLint("MissingPermission")
     fun connect(device: BluetoothDevice, context: Context) {
-        bluetoothGatt = device.connectGatt(context, false, gattCallback)
+        if (!hasBlePermissions(context)) return
+
+        bluetoothGatt = device.connectGatt(context, false, object : BluetoothGattCallback() {
+            override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d(TAG, "Connected to ${device.address}")
+                    gatt.discoverServices()
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    Log.d(TAG, "Disconnected from ${device.address}")
+                }
+            }
+
+            override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+                if (status == BluetoothGatt.GATT_SUCCESS) {
+                    Log.d(TAG, "Services discovered")
+                }
+            }
+
+            override fun onCharacteristicChanged(
+                gatt: BluetoothGatt,
+                characteristic: BluetoothGattCharacteristic
+            ) {
+                val value = characteristic.value
+                Log.d(TAG, "Received: ${value.toString(Charsets.UTF_8)}")
+            }
+        })
+        _isConnected.value = true
     }
+
+    @SuppressLint("MissingPermission")
+    fun disconnect() {
+        bluetoothGatt?.close()
+        bluetoothGatt = null
+        _isConnected.value = false
+    }
+
+    @SuppressLint("MissingPermission")
+    fun sendToHm10(message: String) {
+        val gatt = bluetoothGatt ?: return
+        val service = gatt.getService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")) ?: return
+        val characteristic = service.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")) ?: return
+
+        characteristic.value = message.toByteArray()
+        gatt.writeCharacteristic(characteristic)
+    }
+
 
     private val gattCallback = object : BluetoothGattCallback() {
 
@@ -94,14 +157,6 @@ class BleViewModel @Inject constructor(
             Log.d(TAG, "Received: ${String(value)}")
             // You can update a MutableStateFlow here for Compose UI
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    fun sendData(data: String) {
-        if (rxCharacteristic == null || bluetoothGatt == null) return
-        rxCharacteristic!!.setValue(data.toByteArray())
-        bluetoothGatt!!.writeCharacteristic(rxCharacteristic)
-        Log.d(TAG, "Sent: $data")
     }
 
     private fun hasBlePermissions(context: Context): Boolean {

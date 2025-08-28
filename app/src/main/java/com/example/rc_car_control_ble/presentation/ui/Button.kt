@@ -1,5 +1,6 @@
 package com.example.rc_car_control_ble.presentation.ui
 
+import android.view.MotionEvent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,7 +21,12 @@ import com.example.rc_car_control_ble.R
 import groteskFamily
 
 @Composable
-fun ControlButton(rotate: Float, direction: String){
+fun ControlButton(
+    rotate: Float,
+    direction: String,
+    onPress: () -> Unit,
+    onRelease: () -> Unit
+){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -33,7 +40,20 @@ fun ControlButton(rotate: Float, direction: String){
         OutlinedIconButton(
             onClick = {},
             modifier = Modifier
-                .size(56.dp),
+                .size(56.dp)
+                .pointerInteropFilter { event ->
+                    when (event.action) {
+                        MotionEvent.ACTION_DOWN -> {
+                            onPress()
+                            true
+                        }
+                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                            onRelease()
+                            true
+                        }
+                        else -> false
+                    }
+                },
             border = BorderStroke(5.dp, Color.Black)
         )
         {

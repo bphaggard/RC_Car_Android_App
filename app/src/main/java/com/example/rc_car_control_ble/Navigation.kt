@@ -18,7 +18,7 @@ fun Navigation() {
         composable(
             route = Screen.StartScreen.route
         ) {
-            BackgroundScreen(navController)
+            BackgroundScreen(viewModel, navController)
         }
         composable(
             route = Screen.DeviceScreen.route
