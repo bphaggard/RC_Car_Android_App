@@ -136,6 +136,7 @@ fun DeviceListScreen(
                                         Toast.makeText(context, "Connect permission required", Toast.LENGTH_SHORT).show()
                                     }
                                     viewModel.connect(device, context)
+                                    Toast.makeText(context, "Connected to ${device.name}", Toast.LENGTH_SHORT).show()
                                     onDeviceSelected()
                                 }
                                 .padding(16.dp),
